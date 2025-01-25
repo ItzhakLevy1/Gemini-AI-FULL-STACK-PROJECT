@@ -1,10 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Homepage = () => {
   return (
     <div>
-      <h1>Homepage</h1>
-      {/* Add homepage content here */}
+      <Link to="/dashboard">Dashboard</Link>  
     </div>
   );
 };

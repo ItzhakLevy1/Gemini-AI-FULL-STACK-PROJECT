@@ -1,10 +1,11 @@
-import React from 'react';
+import { SignUp } from "@clerk/clerk-react";
+import React from "react";
+import "./signUpPage.css";
 
 const SignUpPage = () => {
   return (
-    <div>
-      <h1>Sign Up</h1>
-      {/* Add sign-up form here */}
+    <div className="signUpPage">
+      <SignUp path="/sign-up" SignIn="/sign-in" />
     </div>
   );
 };
