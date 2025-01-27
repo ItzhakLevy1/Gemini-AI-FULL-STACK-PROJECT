@@ -1,0 +1,22 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "npx nodemon --env-file .env index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "express": "^4.21.2",
+    "imagekit": "^6.0.0",
+    "dotenv": "^16.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
