@@ -23,7 +23,7 @@ const NewPropmt = () => {
 
   // Handler for button click
   const handleGenerate = async () => {
-    const prompt = "Write a story about AI and magic"; // Example prompt
+    const prompt = "Hi, My name is Itzhak"; // Example prompt
     try {
       const result = await generateContent(prompt); // Call Gemini API
       setResponse(result); // Update state with the response

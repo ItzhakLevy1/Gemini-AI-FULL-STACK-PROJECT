@@ -12,20 +12,28 @@ const ai = new GoogleGenAI({
 
 // Function to send a text prompt to Gemini and get a response
 export const generateContent = async (prompt) => {
-  try {
-    // Call Gemini's generateContent API with the given prompt
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash", // Model version to use
-      contents: prompt, // User prompt
-    });
+  let attempts = 0;
+  while (attempts < 3) {
+    try {
+      // Call Gemini's generateContent API with the given prompt
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash", // Model version to use
+        contents: prompt, // User prompt
+      });
 
-    console.log("Full response:", response);
-    console.log("Gemini says: ", response.text);
+      console.log("Full response:", response);
+      console.log("Gemini says: ", response.text);
 
-    // Return the text so it can be used in other components
-    return response.text;
-  } catch (error) {
-    console.error("Error generating content: ", error);
-    throw error;
+      // Return the text so it can be used in other components
+      return response.text;
+    } catch (error) {
+      if (error.status === "UNAVAILABLE") {
+        attempts++;
+        console.warn(`Model overloaded, retrying... (${attempts})`);
+        await new Promise((res) => setTimeout(res, 2000));
+      } else {
+        throw error;
+      }
+    }
   }
 };
