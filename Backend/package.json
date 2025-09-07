@@ -12,9 +12,10 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
     "express": "^4.21.2",
-    "imagekit": "^6.0.0",
-    "dotenv": "^16.0.3"
+    "imagekit": "^6.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"
