@@ -11,7 +11,7 @@ if (!PUBLISHABLE_KEY) {
 const RootLayout = () => {
   return (
     <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
-      <div className="rootLayout">
+      <div className="rootLayout">  {/*  Main container for the layout to be used as a navbar */}
         <header>
           <Link to="/" className="logo">
             <img src="/logo.png" alt="logo" />
@@ -32,3 +32,10 @@ const RootLayout = () => {
 };
 
 export default RootLayout;
+
+// This layout is used as the main layout for the application
+// It includes a header with a logo and user authentication buttons
+// It uses ClerkProvider to provide authentication context to the app
+// It uses Outlet to render the child routes
+// It conditionally shows the UserButton when the user is signed in
+// and a SignInButton when the user is signed out

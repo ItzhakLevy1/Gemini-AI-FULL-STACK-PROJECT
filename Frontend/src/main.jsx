@@ -16,8 +16,8 @@ const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
-    element: <RootLayout />,
-    children: [
+    element: <RootLayout />,  // Main layout for the application with header and authentication
+    children: [ // Define child routes
       {
         path: "/",
         element: <Homepage />,
@@ -54,3 +54,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     </QueryClientProvider>
   </React.StrictMode>
 );
+
+// This is the main entry point of the React application
+// It sets up the routing using react-router-dom and the data fetching using react-query
+// It defines the routes and their corresponding components
+// It uses RootLayout as the main layout and DashboardLayout for the dashboard and chat pages
+// It also includes authentication routes for sign-in and sign-up pages

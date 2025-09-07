@@ -13,20 +13,26 @@ const DashboardLayout = () => {
     if (isLoaded && !userId) {
       navigate("/sign-in");
     }
-  }, [isLoaded, userId, navigate]);
+  }, [isLoaded, userId, navigate]); // Added navigate to dependency array to avoid warning
 
   if (!isLoaded) return "Loading...";
 
   return (
     <div className="dashboardLayout">
       <div className="menu">
-        <ChatList />
+        <ChatList />  {/* Include the ChatList component in the menu section */}
       </div>
       <div className="content">
-        <Outlet />
+        <Outlet />  {/* Render child routes (DashboardPage or ChatPage) */}
       </div>
     </div>
   );
 };
 
 export default DashboardLayout;
+
+// This layout is used for the dashboard page and its children routes (chat page)
+// It checks if the user is authenticated using Clerk's useAuth hook
+// If the user is not authenticated, it redirects to the sign-in page
+// It uses Outlet to render the child routes (DashboardPage and ChatPage)
+// It also includes a ChatList component in the menu section

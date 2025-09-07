@@ -20,7 +20,13 @@ const ChatList = () => {
       <hr />
       <span className="title">RECENT CHATS</span>
       <div className="list">
-        {isPending
+        <Link>My Chat title</Link>
+        <Link>My Chat title</Link>
+        <Link>My Chat title</Link>
+        <Link>My Chat title</Link>
+        <Link>My Chat title</Link>
+        <Link>My Chat title</Link>
+        {/* {isPending
           ? "Loading..."
           : error
           ? "Something went wrong!"
@@ -28,7 +34,8 @@ const ChatList = () => {
               <Link to={`/dashboard/chats/${chat._id}`} key={chat._id}>
                 {chat.title}
               </Link>
-            ))}
+            ))} */}
+            test
       </div>
       <hr />
       <div className="upgrade">
@@ -43,3 +50,9 @@ const ChatList = () => {
 };
 
 export default ChatList;
+
+// This component displays a list of recent chats and navigation links
+// It uses react-query to fetch the user's chats from the backend API
+// It shows loading and error states accordingly
+// It includes links to create a new chat, explore the main site, and contact
+// It also has a section promoting an upgrade to a pro version

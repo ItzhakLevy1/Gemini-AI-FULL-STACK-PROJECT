@@ -81,3 +81,8 @@ const Homepage = () => {
 };
 
 export default Homepage;
+
+// This is the homepage component of the application
+// It includes a header, a call-to-action button, and an animated chat example using TypeAnimation
+// The chat example simulates a conversation between two humans and an AI bot
+// The typingStatus state is used to change the avatar image based on who is "typing"

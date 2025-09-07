@@ -1,5 +1,5 @@
-import "./newPrompt.css";
 import React, { useEffect, useRef } from "react";
+import "./newPrompt.css";
 
 const NewPropmt = () => {
   const endRef = useRef(null);
