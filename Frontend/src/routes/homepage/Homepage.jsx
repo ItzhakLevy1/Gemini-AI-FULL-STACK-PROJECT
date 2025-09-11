@@ -2,17 +2,22 @@ import { Link } from "react-router-dom";
 import "./homepage.css";
 import { TypeAnimation } from "react-type-animation";
 import { useState } from "react";
+import "./refokus-lines.css";
 
 const Homepage = () => {
   const [typingStatus, setTypingStatus] = useState("Human1");
 
   return (
     <div className="homepage">
-      <img src="/orbital.png" alt="" className="orbital" />
+      {/* Refokus Lines Animation */}
+      <div className="refokus-lines">
+        <div className="line"></div>
+        <div className="line"></div>
+        <div className="line"></div>
+      </div>
       <div className="left">
         <h1>LEVY'S AI</h1>
         <h2>Supercharge your creativity and productivity</h2>
-        <h3>The future is now 💫</h3>
         <Link to="/dashboard">Get Started</Link>
       </div>
       <div className="right">

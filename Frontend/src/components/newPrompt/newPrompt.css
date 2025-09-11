@@ -1,16 +1,22 @@
+/* Space out paragraphs and blocks in react-markdown chat messages */
+.message > *:not(:last-child) {
+  margin-bottom: 2em;
+}
 .endChat {
   padding-bottom: 100px;
 }
 .newForm {
-  width: 50%;
   position: absolute;
   bottom: 0;
-  background-color: #2c2937;
+  background-color: #37393b;
   border-radius: 20px;
   display: flex;
   align-items: center;
   gap: 20px;
   padding: 0px 20px;
+  width: 43%;
+  /* max-width: 600px; */
+  margin: 0 auto;
 
   input {
     flex: 1;
