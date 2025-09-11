@@ -6,17 +6,14 @@
   padding-bottom: 100px;
 }
 .newForm {
-  position: absolute;
-  bottom: 0;
   background-color: #37393b;
   border-radius: 20px;
   display: flex;
   align-items: center;
   gap: 20px;
   padding: 0px 20px;
-  width: 43%;
-  /* max-width: 600px; */
-  margin: 0 auto;
+  width: 75%;
+  margin-top: auto;
 
   input {
     flex: 1;

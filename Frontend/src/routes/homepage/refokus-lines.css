@@ -35,11 +35,13 @@
     #999999 75%,
     #029aff 100%
   );
-  animation: drop 7s 0s infinite;
+  animation: drop 10s 0s infinite; /* Sets the speed */
   animation-fill-mode: forwards;
-  animation-timing-function: cubic-bezier(0.4, 0.26, 0, 0.97);
+  /* Sets the acceleration curve - how the speed changes during the animation (starts slowly, speeds up, then slows down) */
+  animation-timing-function: cubic-bezier(1.1, 1, 11, 1);
 }
 
+/* These determine when each line starts moving (creating a cascading effect) */
 .line:nth-child(1) {
   margin-left: -25%;
 }
@@ -56,11 +58,12 @@
   animation-delay: 2.5s;
 }
 
+/* Movement */
 @keyframes drop {
   0% {
-    top: -50%;
+    top: -50%; /* Start location (above the screen) */
   }
   100% {
-    top: 110%;
+    top: 110%; /* End position (below the screen) */
   }
 }
