@@ -8,15 +8,22 @@ const ChatList = () => {
     queryFn: () =>
       fetch(`${import.meta.env.VITE_API_URL}/api/userchats`, {
         credentials: "include",
-      }).then((res) => res.json()),
+      }).then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+        }
+        return res.json();
+      }),
   });
 
   return (
     <div className="chatList">
       <span className="title">DASHBOARD</span>
-      <Link to="/dashboard">Create a new Chat</Link>
+      <Link to="#" onClick={() => window.location.reload()}>
+        Create a new Chat
+      </Link>
       <Link to="/">Explore Levy's AI</Link>
-      <Link to="/">Contact</Link>
+      {/* <Link to="/">Contact</Link>
       <hr />
       <span className="title">RECENT CHATS</span>
       <div className="list">
@@ -26,7 +33,7 @@ const ChatList = () => {
         <Link>My Chat title</Link>
         <Link>My Chat title</Link>
         <Link>My Chat title</Link>
-        {/* {isPending
+        {isPending
           ? "Loading..."
           : error
           ? "Something went wrong!"
@@ -34,10 +41,10 @@ const ChatList = () => {
               <Link to={`/dashboard/chats/${chat._id}`} key={chat._id}>
                 {chat.title}
               </Link>
-            ))} */}
-            test
+            ))}
+        test
       </div>
-      <hr />
+      <hr /> */}
       <div className="upgrade">
         <img src="/logo.png" alt="" />
         <div className="texts">

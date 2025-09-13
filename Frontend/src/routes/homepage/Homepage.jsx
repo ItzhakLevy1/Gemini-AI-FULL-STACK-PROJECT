@@ -18,7 +18,7 @@ const Homepage = () => {
       <div className="left">
         <h1>LEVY'S AI</h1>
         <h2>Supercharge your creativity and productivity</h2>
-        <Link to="/dashboard">Get Started</Link>
+        <Link to="/dashboard/chats/9283473289432">Get Started</Link>
       </div>
       <div className="right">
         <div className="imgContainer">

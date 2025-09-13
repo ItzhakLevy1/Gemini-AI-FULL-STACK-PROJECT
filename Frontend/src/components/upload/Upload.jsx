@@ -68,9 +68,9 @@ const Upload = ({ setImg }) => {
       />
 
       {/* Custom label that triggers the hidden upload input */}
-      <label onClick={() => ikUpleadRef.current.click()}>
+      {/* <label onClick={() => ikUpleadRef.current.click()}>
         <img src="/attachment.png" alt="Upload attachment" />
-      </label>
+      </label> */}
     </IKContext>
   );
 };
