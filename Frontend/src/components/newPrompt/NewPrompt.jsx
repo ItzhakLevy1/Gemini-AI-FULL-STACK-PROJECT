@@ -23,51 +23,48 @@ const NewPrompt = () => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, img.dbData]);
 
-  // Handler for button click
+  // Handler for button click - FIXED VERSION
   const handleGenerate = async (text) => {
-    // Add the user's message to chat
-    setMessages((prev) => {
-      const newMessages = [...prev, { role: "user", content: text }];
+    // First, add the user's message to chat
+    const userMessage = { role: "user", content: text };
 
-      // Build Gemini history array
-      const geminiHistory = newMessages.map((msg) => {
-        if (msg.type === "image" && msg.filePath) {
-          return {
-            role: msg.role === "user" ? "user" : "model",
-            parts: [
-              {
-                inlineData: {
-                  mimeType: "image/png",
-                  data: msg.filePath, // This should be base64 if you want to send inline, or a URL if using File API
-                },
+    setMessages((prev) => [...prev, userMessage]);
+
+    // Build the complete message history including the new user message
+    const currentMessages = [...messages, userMessage];
+
+    // Build Gemini history array from current messages
+    const geminiHistory = currentMessages.map((msg) => {
+      if (msg.type === "image" && msg.filePath) {
+        return {
+          role: msg.role === "user" ? "user" : "model",
+          parts: [
+            {
+              inlineData: {
+                mimeType: "image/png",
+                data: msg.filePath,
               },
-            ],
-          };
-        } else {
-          return {
-            role: msg.role === "user" ? "user" : "model",
-            parts: [{ text: msg.content }],
-          };
-        }
-      });
-
-      (async () => {
-        try {
-          const result = await generateContent(geminiHistory);
-          setMessages((msgs) => [
-            ...msgs,
-            { role: "assistant", content: result },
-          ]);
-        } catch (error) {
-          setMessages((msgs) => [
-            ...msgs,
-            { role: "assistant", content: "Error generating content" },
-          ]);
-        }
-      })();
-
-      return newMessages;
+            },
+          ],
+        };
+      } else {
+        return {
+          role: msg.role === "user" ? "user" : "model",
+          parts: [{ text: msg.content }],
+        };
+      }
     });
+
+    // Now make the API call and add AI response
+    try {
+      const result = await generateContent(geminiHistory);
+      setMessages((prev) => [...prev, { role: "assistant", content: result }]);
+    } catch (error) {
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: "Error generating content" },
+      ]);
+    }
   };
 
   const handleSubmit = async (e) => {
