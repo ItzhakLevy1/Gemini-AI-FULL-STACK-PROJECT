@@ -36,6 +36,7 @@
     /* Fixed position at bottom */
     left: 50%;
     transform: translateX(-50%);
+    bottom: 0px;
   }
 
   input {
