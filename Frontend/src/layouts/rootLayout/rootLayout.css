@@ -1,5 +1,6 @@
+/* The over all width of both the dashboard menu and the chat messages */
 .rootLayout {
-  padding: 16px 64px;
+  padding: 0px 10px;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -23,6 +24,5 @@
   }
   main {
     flex: 1;
-    overflow: hidden;
   }
 }

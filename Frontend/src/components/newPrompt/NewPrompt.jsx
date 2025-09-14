@@ -63,6 +63,8 @@ const NewPrompt = () => {
       setMessages((prev) => [
         ...prev,
         { role: "assistant", content: "Error generating content" },
+        console.log(error),
+        console.log(error.message),
       ]);
     }
   };

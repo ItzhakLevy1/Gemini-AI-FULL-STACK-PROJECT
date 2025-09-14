@@ -1,6 +1,5 @@
 .dashboardLayout {
   display: flex;
-  gap: 50px;
   padding-top: 20px;
   height: 100%;
 
@@ -11,5 +10,15 @@
   .content {
     flex: 6;
     background-color: #252525;
+    overflow: auto;
+  }
+}
+
+/* Mobile (up to 768px) */
+@media screen and (max-width: 768px) {
+  .dashboardLayout {
+    flex-direction: column;
+    /* Full height minus form space to make sure the generated text will not overlap the input field*/
+    height: calc(100vh - 5em);
   }
 }
