@@ -8,27 +8,18 @@ import DashboardPage from "./routes/dashboardPage/DashboardPage";
 import ChatPage from "./routes/chatPage/ChatPage";
 import RootLayout from "./layouts/rootLayout/RootLayout";
 import DashboardLayout from "./layouts/dashboardLayout/DashboardLayout";
-import SignInPage from "./routes/signInPage/SignInPage";
-import SignUpPage from "./routes/signUpPage/SignUpPage";
 
 // Create a client
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
-    element: <RootLayout />,  // Main layout for the application with header and authentication
-    children: [ // Define child routes
+    element: <RootLayout />, // Main layout for the application with header and authentication
+    children: [
+      // Define child routes
       {
         path: "/",
         element: <Homepage />,
-      },
-      {
-        path: "/sign-in/*",
-        element: <SignInPage />,
-      },
-      {
-        path: "/sign-up/*",
-        element: <SignUpPage />,
       },
       {
         element: <DashboardLayout />,
