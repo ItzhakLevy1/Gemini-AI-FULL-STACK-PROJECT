@@ -9,7 +9,7 @@ const ai = new GoogleGenAI({
   ],
 });
 
-// Function to send a text prompt to Gemini and get a response
+// Original function (keep for backward compatibility)
 export const generateContent = async (prompt) => {
   let attempts = 0;
   const maxRetries = 3;
@@ -63,4 +63,35 @@ export const generateContent = async (prompt) => {
   throw new Error(
     "Max retries exceeded - Gemini service is temporarily unavailable"
   );
+};
+
+// NEW: Minimal streaming function - just add this
+export const generateContentStream = async (prompt, onChunk) => {
+  try {
+    console.log("Starting streaming...", prompt);
+
+    const response = await ai.models.generateContentStream({
+      model: "gemini-2.5-flash",
+      contents: prompt,
+    });
+
+    let fullText = ""; // Accumulate the text here
+    let chunkCount = 0;
+
+    for await (const chunk of response) {
+      chunkCount++;
+      console.log(`Chunk ${chunkCount}:`, chunk.text);
+
+      if (chunk.text && onChunk) {
+        fullText += chunk.text; // Add new chunk to accumulated text
+        console.log("Full text so far:", fullText);
+        onChunk(fullText); // Send the full accumulated text
+      }
+    }
+
+    console.log("Streaming complete. Total chunks:", chunkCount);
+  } catch (error) {
+    console.error("Streaming error:", error);
+    throw error;
+  }
 };

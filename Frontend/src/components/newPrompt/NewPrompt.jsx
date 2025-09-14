@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import "./newPrompt.css";
 import { IKImage } from "imagekitio-react";
 import Upload from "../upload/Upload";
-import { generateContent } from "../../../lib/gemini";
+import { generateContentStream } from "../../../lib/gemini";
 import Markdown from "react-markdown";
 
 const NewPrompt = () => {
@@ -18,17 +18,19 @@ const NewPrompt = () => {
 
   const endRef = useRef(null);
 
-  // Scroll to bottom whenever messages or image change
+  // Scroll to bottom whenever messages change
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, img.dbData]);
+  }, [messages]);
 
-  // Handler for button click - FIXED VERSION
+  // Handler for button click - STREAMING VERSION
   const handleGenerate = async (text) => {
     // First, add the user's message to chat
     const userMessage = { role: "user", content: text };
-
     setMessages((prev) => [...prev, userMessage]);
+
+    // Add empty assistant message that will be updated
+    setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
     // Build the complete message history including the new user message
     const currentMessages = [...messages, userMessage];
@@ -55,17 +57,57 @@ const NewPrompt = () => {
       }
     });
 
-    // Now make the API call and add AI response
     try {
-      const result = await generateContent(geminiHistory);
-      setMessages((prev) => [...prev, { role: "assistant", content: result }]);
+      // Use streaming - update the last message with each chunk
+      await generateContentStream(geminiHistory, (chunkText) => {
+        setMessages((prev) => {
+          const newMessages = [...prev];
+          const lastIndex = newMessages.length - 1;
+          if (newMessages[lastIndex]?.role === "assistant") {
+            newMessages[lastIndex] = {
+              role: "assistant",
+              content: chunkText,
+            };
+          }
+          return newMessages;
+        });
+
+        // Force scroll after state update
+        requestAnimationFrame(() => {
+          console.log("Trying to scroll...");
+
+          // Get the correct chat container (the messages one, not the widget)
+          const chatDiv = document.querySelector(".chat");
+          if (chatDiv) {
+            console.log("Found chat div:", chatDiv);
+            console.log("Current scrollTop:", chatDiv.scrollTop);
+            console.log("ScrollHeight:", chatDiv.scrollHeight);
+            console.log("ClientHeight:", chatDiv.clientHeight);
+
+            // Scroll to bottom
+            chatDiv.scrollTop = chatDiv.scrollHeight;
+
+            console.log("After scroll - scrollTop:", chatDiv.scrollTop);
+          }
+
+          // Also try the endRef approach
+          if (endRef.current) {
+            endRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+          }
+        });
+      });
     } catch (error) {
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: "Error generating content" },
-        console.log(error),
-        console.log(error.message),
-      ]);
+      setMessages((prev) => {
+        const newMessages = [...prev];
+        const lastIndex = newMessages.length - 1;
+        if (newMessages[lastIndex]?.role === "assistant") {
+          newMessages[lastIndex] = {
+            role: "assistant",
+            content: "Error generating content",
+          };
+        }
+        return newMessages;
+      });
     }
   };
 
@@ -111,6 +153,8 @@ const NewPrompt = () => {
             )}
           </div>
         ))}
+        <div className="endChat" ref={endRef}></div>{" "}
+        {/* Move this INSIDE the chat div */}
       </div>
 
       <div className="endChat" ref={endRef}></div>
