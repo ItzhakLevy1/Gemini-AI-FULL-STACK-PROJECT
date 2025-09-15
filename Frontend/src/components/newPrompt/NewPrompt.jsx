@@ -5,10 +5,12 @@ import Upload from "../upload/Upload";
 import { generateContentStream } from "../../../lib/gemini";
 import Markdown from "react-markdown";
 
+// Component for the main chat interface
 const NewPrompt = () => {
-  const [messages, setMessages] = useState([]); // State for full chat history
+  // State to store the chat history (both user and assistant messages)
+  const [messages, setMessages] = useState([]);
 
-  // Local state to track the upload status and response
+  // Local state to manage the image upload status
   const [img, setImg] = useState({
     isLoading: false,
     error: "",
@@ -16,27 +18,30 @@ const NewPrompt = () => {
     aiData: {},
   });
 
+  // useRef to create a reference to the end of the chat, used for auto-scrolling
   const endRef = useRef(null);
 
-  // Scroll to bottom whenever messages change
+  // useEffect hook to handle auto-scrolling to the bottom of the chat
   useEffect(() => {
+    // This effect runs every time the 'messages' state changes
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Handler for button click - STREAMING VERSION
+  // Handler for generating content from Gemini in a streaming fashion
   const handleGenerate = async (text) => {
-    // First, add the user's message to chat
+    // 1. Add the user's message to the chat history
     const userMessage = { role: "user", content: text };
     setMessages((prev) => [...prev, userMessage]);
 
-    // Add empty assistant message that will be updated
+    // 2. Add an empty assistant message to serve as a placeholder for the streamed response
     setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
-    // Build the complete message history including the new user message
+    // 3. Create a complete message history for the Gemini API call
     const currentMessages = [...messages, userMessage];
 
-    // Build Gemini history array from current messages
+    // 4. Map the chat history to the format required by the Gemini API
     const geminiHistory = currentMessages.map((msg) => {
+      // Handle image messages
       if (msg.type === "image" && msg.filePath) {
         return {
           role: msg.role === "user" ? "user" : "model",
@@ -50,6 +55,7 @@ const NewPrompt = () => {
           ],
         };
       } else {
+        // Handle text messages
         return {
           role: msg.role === "user" ? "user" : "model",
           parts: [{ text: msg.content }],
@@ -58,11 +64,12 @@ const NewPrompt = () => {
     });
 
     try {
-      // Use streaming - update the last message with each chunk
+      // 5. Call the streaming function and update the state with each incoming chunk
       await generateContentStream(geminiHistory, (chunkText) => {
         setMessages((prev) => {
           const newMessages = [...prev];
           const lastIndex = newMessages.length - 1;
+          // Ensure we are updating the last message, which should be the empty assistant placeholder
           if (newMessages[lastIndex]?.role === "assistant") {
             newMessages[lastIndex] = {
               role: "assistant",
@@ -72,7 +79,7 @@ const NewPrompt = () => {
           return newMessages;
         });
 
-        // Force scroll after state update
+        // 6. Request a scroll to the bottom after the state has been updated
         requestAnimationFrame(() => {
           console.log("Trying to scroll...");
 
@@ -89,14 +96,14 @@ const NewPrompt = () => {
 
             console.log("After scroll - scrollTop:", chatDiv.scrollTop);
           }
-
-          // Also try the endRef approach
+          // The useEffect hook also handles this, but a direct call can be a good fallback
           if (endRef.current) {
             endRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
           }
         });
       });
     } catch (error) {
+      // 7. Handle errors by updating the last message with an error message
       setMessages((prev) => {
         const newMessages = [...prev];
         const lastIndex = newMessages.length - 1;
@@ -111,15 +118,16 @@ const NewPrompt = () => {
     }
   };
 
+  // Form submission handler
   const handleSubmit = async (e) => {
     e.preventDefault();
     const text = e.target.text.value;
-    if (!text) return;
-    handleGenerate(text);
-    e.target.reset(); // Clear input after sending
+    if (!text) return; // Prevent submission if input is empty
+    handleGenerate(text); // Trigger the content generation
+    e.target.reset(); // Clear the input field
   };
 
-  // Handler to add an image message to chat history
+  // Handler for adding an uploaded image to the chat
   const handleImageUpload = (res) => {
     setImg((prev) => ({ ...prev, isLoading: false, dbData: res }));
     if (res && res.filePath) {
@@ -130,17 +138,18 @@ const NewPrompt = () => {
     }
   };
 
+  // JSX rendering the chat interface
   return (
     <>
       {img.isLoading && <div>Loading...</div>}
 
-      {/* Render full chat history, including image messages */}
       <div className="chat">
         {messages.map((msg, index) => (
           <div
             key={index}
             className={`message ${msg.role === "user" ? "user" : "assistant"}`}
           >
+            {/* Conditional rendering for image or text messages */}
             {msg.type === "image" && msg.filePath ? (
               <IKImage
                 urlEndpoint={import.meta.env.VITE_IMAGE_KIT_ENDPOINT}
@@ -149,17 +158,17 @@ const NewPrompt = () => {
                 transformation={[{ width: 380 }]}
               />
             ) : (
+              // Use react-markdown to render markdown formatted text
               <Markdown>{msg.content}</Markdown>
             )}
           </div>
         ))}
-        <div className="endChat" ref={endRef}></div>{" "}
-        {/* Move this INSIDE the chat div */}
+        {/* Empty div for scrolling to the bottom */}
+        <div className="endChat" ref={endRef}></div>
       </div>
 
-      <div className="endChat" ref={endRef}></div>
-
       <form className="newForm" onSubmit={handleSubmit}>
+        {/* The upload component for handling image uploads */}
         <Upload
           setImg={(updater) =>
             typeof updater === "function"
@@ -186,3 +195,13 @@ const NewPrompt = () => {
 };
 
 export default NewPrompt;
+
+/* 
+File Summary
+This React component, NewPrompt, serves as the main chat interface for an AI application. 
+It manages the full conversation history, handling both text and image messages. 
+The core logic resides in handleGenerate, which initiates a streaming request to the Gemini API via the generateContentStream function. 
+As new chunks of the AI's response arrive, the component's state is updated, causing the UI to re-render the content in real-time. 
+It also includes an auto-scrolling feature to ensure the latest messages are always visible and handles image uploads, 
+integrating them into the chat history for multimodal conversations.
+*/
