@@ -4,11 +4,13 @@ import { IKImage } from "imagekitio-react";
 import Upload from "../upload/Upload";
 import { generateContentStream } from "../../../lib/gemini";
 import Markdown from "react-markdown";
+import ThreeDot from "react-loading-indicators/ThreeDot";
 
 // Component for the main chat interface
 const NewPrompt = () => {
   // State to store the chat history (both user and assistant messages)
   const [messages, setMessages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Local state to manage the image upload status
   const [img, setImg] = useState({
@@ -17,6 +19,14 @@ const NewPrompt = () => {
     dbData: {},
     aiData: {},
   });
+
+  const LoadingDots = () => (
+    <ThreeDot
+      /* style={{ fontSize: "8px" }} */
+      color="#2179feff"
+      size="small"
+    />
+  );
 
   // useRef to create a reference to the end of the chat, used for auto-scrolling
   const endRef = useRef(null);
@@ -29,6 +39,9 @@ const NewPrompt = () => {
 
   // Handler for generating content from Gemini in a streaming fashion
   const handleGenerate = async (text) => {
+    // Set the loading state to true
+    setIsLoading(true);
+
     // 1. Add the user's message to the chat history
     const userMessage = { role: "user", content: text };
     setMessages((prev) => [...prev, userMessage]);
@@ -76,6 +89,7 @@ const NewPrompt = () => {
               content: chunkText,
             };
           }
+          setIsLoading(false);
           return newMessages;
         });
 
@@ -185,7 +199,14 @@ const NewPrompt = () => {
           onImageUpload={handleImageUpload}
         />
         <input id="file" type="file" multiple={false} hidden />
-        <input type="text" name="text" placeholder="Ask anything" />
+        {isLoading ? (
+          <>
+            <LoadingDots /> <input type="text" name="text" />{" "}
+          </>
+        ) : (
+          <input type="text" name="text" placeholder="Ask anything" />
+        )}
+
         <button>
           <img src="/arrow.png" alt="" />
         </button>
