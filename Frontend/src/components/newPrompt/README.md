@@ -1,5 +1,11 @@
 # MERN Stack Application
 
+Gemini AI Full Stack Project.
+
+A full-stack AI-powered web application that integrates the Gemini AI API to deliver intelligent responses through a modern web interface.
+
+The project demonstrates a complete full-stack architecture including a React frontend and a Node.js backend, focusing on API integration, asynchronous communication, and modern development practices.
+
 A full-stack web application built with the **MERN stack (MongoDB, Express.js, React, Node.js)**.
 The project demonstrates modern web development practices including REST API design, state management, authentication, and scalable frontend architecture.
 
