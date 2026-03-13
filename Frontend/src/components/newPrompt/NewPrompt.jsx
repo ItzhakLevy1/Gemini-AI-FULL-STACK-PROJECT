@@ -23,7 +23,7 @@ const NewPrompt = () => {
   const LoadingDots = () => (
     <ThreeDot
       /* style={{ fontSize: "8px" }} */
-      color="#2179feff"
+      color="#ececec"
       size="small"
     />
   );
